@@ -1,9 +1,9 @@
 clientes = {}
 def contar_la_lista (lista, i=0):
     try:
-        lista[i]
+        _= lista[i]
         return 1 + contar_la_lista(lista, i + 1)
-    except ValueError:
+    except IndexError:
         return 0
 
 def destinos_totales(claves, i=0):
@@ -11,7 +11,7 @@ def destinos_totales(claves, i=0):
         clave = claves[i]
         destinos = clientes[clave]["destino"]
         return contar_la_lista(destinos) + destinos_totales(claves, i + 1)
-    except ValueError:
+    except IndexError:
         return 0
 def clientes_con_mas_destinos_visitados(claves, i=0, max_nombre= " ", max_cantidad =0):
     try:
@@ -23,13 +23,15 @@ def clientes_con_mas_destinos_visitados(claves, i=0, max_nombre= " ", max_cantid
             return clientes_con_mas_destinos_visitados(clientes,claves, i + 1, nombre, cantidad_actual)
         else:
             return clientes_con_mas_destinos_visitados(clientes, clave, i + 1, max_nombre, max_cantidad)
-    except ValueError:
+    except IndexError:
         return max_nombre, max_cantidad
-def obtener_claves(cod):
-    claves = []
-    for clave in cod:
-        clave.append(clave)
-    return claves
+def obtener_claves(diccionario, claves= [], i=0):
+    try:
+        clave = list (diccionario) [i]
+        claves.append(clave)
+        return obtener_claves(diccionario, claves, i + 1)
+    except IndexError:
+        return claves
 n = int(input("¿Cuantos clientes desea registrar para el viaje"))
 for  i in range(n):
     print(f"\nCliente #{i+1}:")
@@ -57,5 +59,8 @@ for codigo, datos in clientes.items():
 
 claves = obtener_claves(clientes)
 total = destinos_totales(claves)
+print(f"\nTotal de destinos registrados entre todos los clientes: {total} ")
+nombre_max, cantidad_max =clientes_con_mas_destinos_visitados(claves)
+print(f"\nCliente con más destinos: {nombre_max} ({cantidad_max} destinos) ")
 
 
